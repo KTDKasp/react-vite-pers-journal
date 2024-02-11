@@ -1,7 +1,9 @@
 import './Button.css';
 
-export const Button = () => {
+export const Button = ({ children }) => {
   return (
-    <button className='button accent'>Сохранить</button>
+    <button className='button accent'>
+      {children}
+    </button>
   );
 };

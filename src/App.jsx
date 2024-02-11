@@ -1,31 +1,28 @@
+import React from 'react';
 import './App.css';
-import { Button } from './components/Button';
+import { JournalForm } from './components/JournalForm';
 import { JournalItemList } from './components/JournalItemList';
 import { Body } from './layouts/Body';
 import { LeftPanel } from './layouts/LeftPanel';
 
 function App() {
-  const data = [
-    {
-      title: 'Подготовка к обновлению курсов',
-      date: new Date(),
-      text: 'Сегодня провёл весь день за уроками'
-    },
-    {
-      title: 'title2',
-      date: new Date(),
-      text: 'text2'
-    }
-  ];
+  const [journalData, setJournalData] = React.useState([]);
+
+  const addJournalData = (obj) => {
+    setJournalData((prev) => [...prev, {
+      title: obj.title,
+      text: obj.text,
+      date: new Date(obj.date)
+    }]);
+  };
 
   return (
     <>
       <LeftPanel>
-        <JournalItemList data={data} />
+        <JournalItemList data={journalData} />
       </LeftPanel>
       <Body>
-        Body
-        <Button />
+        <JournalForm addJournalData={addJournalData}/>
       </Body>
     </>
   );
