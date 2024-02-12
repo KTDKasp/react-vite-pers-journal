@@ -8,7 +8,7 @@ export const LeftPanel = ({ children }) => {
       <header className="left-panel__header">
         <img src="./personal-journal.svg" alt="Personal Journal" />
       </header>
-        <JournalAddButton />
+      <JournalAddButton />
       {children}
     </div>
   );

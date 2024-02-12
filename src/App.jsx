@@ -10,6 +10,7 @@ function App() {
 
   const addJournalData = (obj) => {
     setJournalData((prev) => [...prev, {
+      id: prev.length > 0 ? Math.max(...prev.map(itemId => itemId.id)) + 1 : 1,
       title: obj.title,
       text: obj.text,
       date: new Date(obj.date)
