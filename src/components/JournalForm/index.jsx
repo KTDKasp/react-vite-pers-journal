@@ -44,23 +44,56 @@ export const JournalForm = ({ addJournalData }) => {
   return (
     <>
       <form className="journal-form" action="" onSubmit={addJournalItem}>
-        <input
-          type="text"
-          name="title"
-          className={`input ${isFormValid.title ? '' : 'invalid'}`}
-        />
-        <input
-          type="date"
-          name="date"
-          className={`input ${isFormValid.date ? '' : 'invalid'}`}
-        />
-        <input type="text" name="tag" />
+        <div className="journal-form__title">
+          <input
+            type="text"
+            placeholder="Введите название..."
+            name="title"
+            className={`input-title ${isFormValid.title ? '' : 'invalid'}`}
+          />
+          <img src="./bin.svg" alt="Recycle bin" />
+        </div>
+
+        <div className="form-input">
+          <div className="form-row">
+            <label htmlFor="date" className="form-label">
+              <img src="./calendar.svg" alt="Календрарь" />
+              <span>Дата</span>
+            </label>
+            <input
+              type="date"
+              name="date"
+              id="date"
+              className={`input ${isFormValid.date ? '' : 'invalid'}`}
+            />
+          </div>
+          <hr className='hr'/>
+        </div>
+
+        <div className="form-input">
+          <div className="form-row">
+            <label htmlFor="tag" className="form-label">
+              <img src="./folder.svg" alt="Папка" />
+              <span>Метки</span>
+            </label>
+            <input
+              type="text"
+              name="tag"
+              id="tag"
+              className="input"
+              placeholder="Введите теги..."
+            />
+          </div>
+          <hr className='hr'/>
+        </div>
+
         <textarea
           name="post"
           id=""
           cols="30"
           rows="10"
-          className={`input ${isFormValid.post ? '' : 'invalid'}`}
+          placeholder='Введите текст...'
+          className={`textarea ${isFormValid.post ? '' : 'invalid'}`}
         ></textarea>
         <Button>Сохранить</Button>
       </form>
