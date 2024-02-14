@@ -12,7 +12,7 @@ function App() {
     setJournalData((prev) => [...prev, {
       id: prev.length > 0 ? Math.max(...prev.map(itemId => itemId.id)) + 1 : 1,
       title: obj.title,
-      text: obj.text,
+      text: obj.post,
       date: new Date(obj.date)
     }]);
   };

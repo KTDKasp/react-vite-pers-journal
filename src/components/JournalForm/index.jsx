@@ -2,14 +2,29 @@ import React from 'react';
 import { Button } from '../Button';
 import './JournalForm.css';
 
-// import React from 'react';
+const INITIAL_STATE = {
+  title: true,
+  date: true,
+  post: true
+};
 
 export const JournalForm = ({ addJournalData }) => {
-  const [isFormValid, setIsFormValid] = React.useState({
-    title: true,
-    date: true,
-    post: true
-  });
+
+  const [isFormValid, setIsFormValid] = React.useState(INITIAL_STATE);
+
+  React.useEffect(() => {
+    let timerId;
+    if (!isFormValid.date || !isFormValid.post || !isFormValid.title) {
+      timerId = setTimeout(() => {
+        console.log('side effect');
+        setIsFormValid(INITIAL_STATE);
+      }, 2000);
+    }
+
+    return () => {
+      clearTimeout(timerId);
+    };
+  }, [isFormValid]);
 
   const addJournalItem = (event) => {
     event.preventDefault();
