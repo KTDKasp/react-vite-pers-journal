@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '../Button';
-import './JournalForm.css';
 import { INITIAL_STATE, formReducer } from './JournalForm.state';
+import './JournalForm.css';
 
 export const JournalForm = ({ addJournalData }) => {
   const [formState, dispatchForm] = React.useReducer(
@@ -14,7 +14,7 @@ export const JournalForm = ({ addJournalData }) => {
     let timerId;
     if (!isValid.date || !isValid.post || !isValid.title) {
       timerId = setTimeout(() => {
-        console.log('side effect');
+        console.log('side effect - очистка ');
         dispatchForm({ type: 'RESET_VALIDITY' });
       }, 2000);
     }
@@ -29,7 +29,7 @@ export const JournalForm = ({ addJournalData }) => {
       addJournalData(values);
       dispatchForm({ type: 'CLEAR' });
     }
-  }, [isFormReadyToSubmit]);
+  }, [isFormReadyToSubmit, addJournalData, values]);
 
   const onChangeInput = (event) => {
     dispatchForm({

@@ -20,7 +20,7 @@ export const JournalItemList = ({ data }) => {
       {
         data.length === 0 ? textP : data.sort(sortItems).map((item) => (
           <CardButton key={item.id}>
-            <JournalItem title={item.title} date={item.date} text={item.text} />
+            <JournalItem title={item.title} date={item.date} post={item.post} />
           </CardButton>
         ))
       }
