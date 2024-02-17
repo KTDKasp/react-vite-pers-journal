@@ -1,4 +1,5 @@
 import { JournalAddButton } from '../../components/JournalAddButton';
+import { SelectUser } from '../../components/SelectUser';
 
 import './LeftPanel.css';
 
@@ -8,6 +9,7 @@ export const LeftPanel = ({ children }) => {
       <header className="left-panel__header">
         <img src="./personal-journal.svg" alt="Personal Journal" />
       </header>
+      <SelectUser />
       <JournalAddButton />
       {children}
     </div>

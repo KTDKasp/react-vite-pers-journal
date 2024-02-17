@@ -1,0 +1,19 @@
+.input-title {
+  border: none;
+  font-size: 2rem;
+  line-height: 2.5rem;
+  font-weight: 600;
+  background: none;
+}
+
+.input {
+  background: none;
+  font-size: 0.875rem;
+  line-height: normal;
+  font-weight: 600;
+  width: 100%;
+}
+
+.invalid {
+  border: 1px solid red;
+}

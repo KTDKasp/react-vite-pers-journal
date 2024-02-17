@@ -1,112 +1,139 @@
 import React from 'react';
 import { Button } from '../Button';
 import { INITIAL_STATE, formReducer } from './JournalForm.state';
+import { Input } from '../Input';
+import { UserContext } from '../../App';
+
 import './JournalForm.css';
 
 export const JournalForm = ({ addJournalData }) => {
-  const [formState, dispatchForm] = React.useReducer(
-    formReducer,
-    INITIAL_STATE
-  );
-  const { isValid, isFormReadyToSubmit, values } = formState;
+	const [formState, dispatchForm] = React.useReducer(
+		formReducer,
+		INITIAL_STATE
+	);
+	const { isValid, isFormReadyToSubmit, values } = formState;
 
-  React.useEffect(() => {
-    let timerId;
-    if (!isValid.date || !isValid.post || !isValid.title) {
-      timerId = setTimeout(() => {
-        console.log('side effect - очистка ');
-        dispatchForm({ type: 'RESET_VALIDITY' });
-      }, 2000);
-    }
+	const titleRef = React.useRef();
+	const dateRef = React.useRef();
+	const postRef = React.useRef();
 
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, [isValid]);
+	const { userId } = React.useContext(UserContext);
 
-  React.useEffect(() => {
-    if (isFormReadyToSubmit) {
-      addJournalData(values);
-      dispatchForm({ type: 'CLEAR' });
-    }
-  }, [isFormReadyToSubmit, addJournalData, values]);
+	const focusError = (isValid) => {
+		switch (true) {
+			case !isValid.title:
+				titleRef.current.focus();
+				break;
+			case !isValid.date:
+				dateRef.current.focus();
+				break;
+			case !isValid.post:
+				postRef.current.focus();
+				break;
+		}
+	};
 
-  const onChangeInput = (event) => {
-    dispatchForm({
-      type: 'SET_VALUE',
-      payload: { [event.target.name]: event.target.value }
-    });
-  };
+	React.useEffect(() => {
+		let timerId;
+		if (!isValid.date || !isValid.post || !isValid.title) {
+			focusError(isValid);
+			timerId = setTimeout(() => {
+				dispatchForm({ type: 'RESET_VALIDITY' });
+			}, 2000);
+		}
 
-  const addJournalItem = (event) => {
-    event.preventDefault();
-    dispatchForm({ type: 'SUBMIT' });
-  };
+		return () => {
+			clearTimeout(timerId);
+		};
+	}, [isValid]);
 
-  return (
-    <>
-      <form className="journal-form" action="" onSubmit={addJournalItem}>
-        <div className="journal-form__title">
-          <input
-            value={values.title}
-            onChange={(event) => onChangeInput(event)}
-            type="text"
-            placeholder="Введите название..."
-            name="title"
-            className={`input-title ${isValid.title ? '' : 'invalid'}`}
-          />
-          <img src="./bin.svg" alt="Recycle bin" />
-        </div>
+	React.useEffect(() => {
+		if (isFormReadyToSubmit) {
+			addJournalData(values);
+			dispatchForm({ type: 'CLEAR' });
+		}
+	}, [isFormReadyToSubmit, addJournalData, values]);
 
-        <div className="form-input">
-          <div className="form-row">
-            <label htmlFor="date" className="form-label">
-              <img src="./calendar.svg" alt="Календрарь" />
-              <span>Дата</span>
-            </label>
-            <input
-              value={values.date}
-              onChange={(event) => onChangeInput(event)}
-              type="date"
-              name="date"
-              id="date"
-              className={`input ${isValid.date ? '' : 'invalid'}`}
-            />
-          </div>
-          <hr className="hr" />
-        </div>
+	const onChangeInput = (event) => {
+		dispatchForm({
+			type: 'SET_VALUE',
+			payload: { [event.target.name]: event.target.value }
+		});
+	};
 
-        <div className="form-input">
-          <div className="form-row">
-            <label htmlFor="tag" className="form-label">
-              <img src="./folder.svg" alt="Папка" />
-              <span>Метки</span>
-            </label>
-            <input
-              value={values.tag}
-              onChange={(event) => onChangeInput(event)}
-              type="text"
-              name="tag"
-              id="tag"
-              className="input"
-              placeholder="Введите теги..."
-            />
-          </div>
-          <hr className="hr" />
-        </div>
+	const addJournalItem = (event) => {
+		event.preventDefault();
+		dispatchForm({ type: 'SUBMIT' });
+	};
 
-        <textarea
-          value={values.post}
-          onChange={(event) => onChangeInput(event)}
-          name="post"
-          id=""
-          cols="30"
-          rows="10"
-          placeholder="Введите текст..."
-          className={`textarea ${isValid.post ? '' : 'invalid'}`}
-        ></textarea>
-        <Button>Сохранить</Button>
-      </form>
-    </>
-  );
+	return (
+		<>
+			<form className="journal-form" action="" onSubmit={addJournalItem}>
+				{userId}
+				<div className="journal-form__title">
+					<Input
+						ref={titleRef}
+						value={values.title}
+						onChange={(event) => onChangeInput(event)}
+						type="text"
+						placeholder="Введите название..."
+						name="title"
+						isValid={isValid.title}
+						appearance="title"
+					/>
+					<img src="./bin.svg" alt="Recycle bin" />
+				</div>
+
+				<div className="form-input">
+					<div className="form-row">
+						<label htmlFor="date" className="form-label">
+							<img src="./calendar.svg" alt="Календрарь" />
+							<span>Дата</span>
+						</label>
+						<Input
+							ref={dateRef}
+							value={values.date}
+							onChange={(event) => onChangeInput(event)}
+							type="date"
+							name="date"
+							id="date"
+							isValid={isValid.date}
+						/>
+					</div>
+					<hr className="hr" />
+				</div>
+
+				<div className="form-input">
+					<div className="form-row">
+						<label htmlFor="tag" className="form-label">
+							<img src="./folder.svg" alt="Папка" />
+							<span>Метки</span>
+						</label>
+						<Input
+							value={values.tag}
+							onChange={(event) => onChangeInput(event)}
+							type="text"
+							name="tag"
+							id="tag"
+							placeholder="Введите теги..."
+						/>
+					</div>
+					<hr className="hr" />
+				</div>
+
+				<textarea
+					ref={postRef}
+					value={values.post}
+					onChange={(event) => onChangeInput(event)}
+					name="post"
+					id=""
+					cols="30"
+					rows="10"
+					placeholder="Введите текст..."
+					className={`textarea ${isValid.post ? '' : 'invalid'}`}
+				></textarea>
+				<Button>Сохранить</Button>
+			</form>
+		</>
+	);
 };

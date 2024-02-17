@@ -10,14 +10,6 @@
   align-items: center;
 }
 
-.input-title {
-  border: none;
-  font-size: 2rem;
-  line-height: 2.5rem;
-  font-weight: 600;
-  background: none;
-}
-
 .form-label {
   display: flex;
   align-items: center;
@@ -36,21 +28,9 @@
   border-bottom: 1px solid #323232;
 }
 
-.input {
-  background: none;
-  font-size: 0.875rem;
-  line-height: normal;
-  font-weight: 600;
-  width: 100%;
-}
-
 .textarea {
   background: none;
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.75rem;
-}
-
-.invalid {
-  border: 1px solid red;
 }

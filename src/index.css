@@ -38,3 +38,7 @@ body {
   height: 100dvh;
   background-color: rgba(24, 24, 24, 1);
 }
+
+option {
+  background: black;
+}
