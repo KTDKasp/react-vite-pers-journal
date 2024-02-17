@@ -1,59 +1,46 @@
 import React from 'react';
 import { Button } from '../Button';
 import './JournalForm.css';
-
-const INITIAL_STATE = {
-  title: true,
-  date: true,
-  post: true
-};
+import { INITIAL_STATE, formReducer } from './JournalForm.state';
 
 export const JournalForm = ({ addJournalData }) => {
-
-  const [isFormValid, setIsFormValid] = React.useState(INITIAL_STATE);
+  const [formState, dispatchForm] = React.useReducer(
+    formReducer,
+    INITIAL_STATE
+  );
+  const { isValid, isFormReadyToSubmit, values } = formState;
 
   React.useEffect(() => {
     let timerId;
-    if (!isFormValid.date || !isFormValid.post || !isFormValid.title) {
+    if (!isValid.date || !isValid.post || !isValid.title) {
       timerId = setTimeout(() => {
         console.log('side effect');
-        setIsFormValid(INITIAL_STATE);
+        dispatchForm({ type: 'RESET_VALIDITY' });
       }, 2000);
     }
 
     return () => {
       clearTimeout(timerId);
     };
-  }, [isFormValid]);
+  }, [isValid]);
+
+  React.useEffect(() => {
+    if (isFormReadyToSubmit) {
+      addJournalData(values);
+      dispatchForm({ type: 'CLEAR' });
+    }
+  }, [isFormReadyToSubmit]);
+
+  const onChangeInput = (event) => {
+    dispatchForm({
+      type: 'SET_VALUE',
+      payload: { [event.target.name]: event.target.value }
+    });
+  };
 
   const addJournalItem = (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const formProps = Object.fromEntries(formData);
-    let validForm = true;
-    if (!formProps.title?.trim().length) {
-      setIsFormValid((state) => ({ ...state, title: false }));
-      validForm = false;
-    } else {
-      setIsFormValid((state) => ({ ...state, title: true }));
-    }
-    if (!formProps.date) {
-      setIsFormValid((state) => ({ ...state, date: false }));
-      validForm = false;
-    } else {
-      setIsFormValid((state) => ({ ...state, date: true }));
-    }
-    if (!formProps.post?.trim().length) {
-      setIsFormValid((state) => ({ ...state, post: false }));
-      validForm = false;
-    } else {
-      setIsFormValid((state) => ({ ...state, post: true }));
-    }
-
-    if (!validForm) {
-      return;
-    }
-    addJournalData(formProps);
+    dispatchForm({ type: 'SUBMIT' });
   };
 
   return (
@@ -61,10 +48,12 @@ export const JournalForm = ({ addJournalData }) => {
       <form className="journal-form" action="" onSubmit={addJournalItem}>
         <div className="journal-form__title">
           <input
+            value={values.title}
+            onChange={(event) => onChangeInput(event)}
             type="text"
             placeholder="Введите название..."
             name="title"
-            className={`input-title ${isFormValid.title ? '' : 'invalid'}`}
+            className={`input-title ${isValid.title ? '' : 'invalid'}`}
           />
           <img src="./bin.svg" alt="Recycle bin" />
         </div>
@@ -76,13 +65,15 @@ export const JournalForm = ({ addJournalData }) => {
               <span>Дата</span>
             </label>
             <input
+              value={values.date}
+              onChange={(event) => onChangeInput(event)}
               type="date"
               name="date"
               id="date"
-              className={`input ${isFormValid.date ? '' : 'invalid'}`}
+              className={`input ${isValid.date ? '' : 'invalid'}`}
             />
           </div>
-          <hr className='hr'/>
+          <hr className="hr" />
         </div>
 
         <div className="form-input">
@@ -92,6 +83,8 @@ export const JournalForm = ({ addJournalData }) => {
               <span>Метки</span>
             </label>
             <input
+              value={values.tag}
+              onChange={(event) => onChangeInput(event)}
               type="text"
               name="tag"
               id="tag"
@@ -99,16 +92,18 @@ export const JournalForm = ({ addJournalData }) => {
               placeholder="Введите теги..."
             />
           </div>
-          <hr className='hr'/>
+          <hr className="hr" />
         </div>
 
         <textarea
+          value={values.post}
+          onChange={(event) => onChangeInput(event)}
           name="post"
           id=""
           cols="30"
           rows="10"
-          placeholder='Введите текст...'
-          className={`textarea ${isFormValid.post ? '' : 'invalid'}`}
+          placeholder="Введите текст..."
+          className={`textarea ${isValid.post ? '' : 'invalid'}`}
         ></textarea>
         <Button>Сохранить</Button>
       </form>

@@ -8,11 +8,27 @@ import { LeftPanel } from './layouts/LeftPanel';
 function App() {
   const [journalData, setJournalData] = React.useState([]);
 
+  React.useEffect(() => {
+    const data = JSON.parse(localStorage.getItem('data'));
+    if (data) {
+      setJournalData(data.map(item => ({
+        ...item,
+        date: new Date(item.date)
+      })));
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (journalData.length) {
+      localStorage.setItem('data', JSON.stringify(journalData));
+    }
+  }, [journalData]);
+
   const addJournalData = (obj) => {
     setJournalData((prev) => [...prev, {
       id: prev.length > 0 ? Math.max(...prev.map(itemId => itemId.id)) + 1 : 1,
       title: obj.title,
-      text: obj.post,
+      post: obj.post,
       date: new Date(obj.date)
     }]);
   };
