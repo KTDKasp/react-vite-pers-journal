@@ -10,6 +10,19 @@
   align-items: center;
 }
 
+.journal-form__bin {
+  border: none;
+  background: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 50%;
+  padding: 5px;
+}
+
+.journal-form__bin:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
 .form-label {
   display: flex;
   align-items: center;

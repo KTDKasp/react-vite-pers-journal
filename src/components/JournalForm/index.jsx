@@ -6,7 +6,7 @@ import { UserContext } from '../../App';
 
 import './JournalForm.css';
 
-export const JournalForm = ({ addJournalData, data }) => {
+export const JournalForm = ({ addJournalData, data, onDelete }) => {
 	const [formState, dispatchForm] = React.useReducer(
 		formReducer,
 		INITIAL_STATE
@@ -34,11 +34,18 @@ export const JournalForm = ({ addJournalData, data }) => {
 	};
 
 	React.useEffect(() => {
+		if (!data) {
+			dispatchForm({ type: 'CLEAR' });
+			dispatchForm({
+				type: 'SET_VALUE',
+				payload: { userId: userId }
+			});
+		}
 		dispatchForm({
 			type: 'SET_VALUE',
 			payload: { ...data }
 		});
-	}, [data]);
+	}, [data, userId]);
 
 	React.useEffect(() => {
 		let timerId;
@@ -66,6 +73,7 @@ export const JournalForm = ({ addJournalData, data }) => {
 	}, [isFormReadyToSubmit, addJournalData, values, userId]);
 
   React.useEffect(() => {
+		dispatchForm({ type: 'CLEAR' });
     dispatchForm({
 			type: 'SET_VALUE',
 			payload: { userId: userId }
@@ -84,6 +92,15 @@ export const JournalForm = ({ addJournalData, data }) => {
 		dispatchForm({ type: 'SUBMIT' });
 	};
 
+	const deleteJournalItem = () => {
+		onDelete(data.id);
+		dispatchForm({ type: 'CLEAR' });
+		dispatchForm({
+			type: 'SET_VALUE',
+			payload: { userId: userId }
+		});
+	};
+
 	return (
 		<>
 			<form className="journal-form" action="" onSubmit={addJournalItem}>
@@ -98,7 +115,9 @@ export const JournalForm = ({ addJournalData, data }) => {
 						isValid={isValid.title}
 						appearance="title"
 					/>
-					<img src="./bin.svg" alt="Recycle bin" />
+					{data?.id && <button onClick={deleteJournalItem} className='journal-form__bin' type='button'>
+						<img src="./bin.svg" alt="Recycle bin" />
+					</button>}
 				</div>
 
 				<div className="form-input">
