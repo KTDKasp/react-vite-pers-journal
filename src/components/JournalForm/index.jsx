@@ -6,7 +6,7 @@ import { UserContext } from '../../App';
 
 import './JournalForm.css';
 
-export const JournalForm = ({ addJournalData }) => {
+export const JournalForm = ({ addJournalData, data }) => {
 	const [formState, dispatchForm] = React.useReducer(
 		formReducer,
 		INITIAL_STATE
@@ -34,6 +34,13 @@ export const JournalForm = ({ addJournalData }) => {
 	};
 
 	React.useEffect(() => {
+		dispatchForm({
+			type: 'SET_VALUE',
+			payload: { ...data }
+		});
+	}, [data]);
+
+	React.useEffect(() => {
 		let timerId;
 		if (!isValid.date || !isValid.post || !isValid.title) {
 			focusError(isValid);
@@ -51,8 +58,12 @@ export const JournalForm = ({ addJournalData }) => {
 		if (isFormReadyToSubmit) {
 			addJournalData(values);
 			dispatchForm({ type: 'CLEAR' });
+			dispatchForm({
+				type: 'SET_VALUE',
+				payload: { userId: userId }
+			});
 		}
-	}, [isFormReadyToSubmit, addJournalData, values]);
+	}, [isFormReadyToSubmit, addJournalData, values, userId]);
 
   React.useEffect(() => {
     dispatchForm({
@@ -98,7 +109,7 @@ export const JournalForm = ({ addJournalData }) => {
 						</label>
 						<Input
 							ref={dateRef}
-							value={values.date}
+							value={values.date ? new Date(values.date).toISOString().slice(0, 10) : ''}
 							onChange={(event) => onChangeInput(event)}
 							type="date"
 							name="date"

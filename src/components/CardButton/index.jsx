@@ -1,8 +1,8 @@
 import './CardButton.css';
 
-export const CardButton = ({ children }) => {
+export const CardButton = ({ children, ...props }) => {
   return (
-    <button className="card-button">
+    <button {...props} className="card-button">
       {children}
     </button>
   );

@@ -5,7 +5,7 @@ import { JournalItem } from '../JournalItem';
 
 import './JournalItemList.css';
 
-export const JournalItemList = ({ data }) => {
+export const JournalItemList = ({ data, setItem }) => {
   const { userId } = React.useContext(UserContext);
 
   const textP = <p>Нет никаких записей. Добавьте хотя бы одну запись.</p>;
@@ -26,7 +26,7 @@ export const JournalItemList = ({ data }) => {
             .filter((item) => item.userId === userId)
             .sort(sortItems)
             .map((item) => (
-              <CardButton key={item.id}>
+              <CardButton key={item.id} onClick={() => setItem(item)}>
                 <JournalItem
                   title={item.title}
                   date={item.date}
