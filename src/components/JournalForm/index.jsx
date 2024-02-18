@@ -54,6 +54,13 @@ export const JournalForm = ({ addJournalData }) => {
 		}
 	}, [isFormReadyToSubmit, addJournalData, values]);
 
+  React.useEffect(() => {
+    dispatchForm({
+			type: 'SET_VALUE',
+			payload: { userId: userId }
+		});
+  }, [userId]);
+
 	const onChangeInput = (event) => {
 		dispatchForm({
 			type: 'SET_VALUE',
@@ -69,7 +76,6 @@ export const JournalForm = ({ addJournalData }) => {
 	return (
 		<>
 			<form className="journal-form" action="" onSubmit={addJournalItem}>
-				{userId}
 				<div className="journal-form__title">
 					<Input
 						ref={titleRef}

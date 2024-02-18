@@ -1,11 +1,14 @@
+import React from 'react';
+import { UserContext } from '../../App';
 import { CardButton } from '../CardButton';
 import { JournalItem } from '../JournalItem';
 
 import './JournalItemList.css';
 
 export const JournalItemList = ({ data }) => {
+  const { userId } = React.useContext(UserContext);
 
-  const textP = <p>Нет никаких записей. Добавьте хотя бы одну запись.</p>; 
+  const textP = <p>Нет никаких записей. Добавьте хотя бы одну запись.</p>;
 
   const sortItems = (a, b) => {
     if (a.date < b.date) {
@@ -16,14 +19,21 @@ export const JournalItemList = ({ data }) => {
   };
 
   return (
-    <div className='journal-item__list'>
-      {
-        data.length === 0 ? textP : data.sort(sortItems).map((item) => (
-          <CardButton key={item.id}>
-            <JournalItem title={item.title} date={item.date} post={item.post} />
-          </CardButton>
-        ))
-      }
+    <div className="journal-item__list">
+      {data.length === 0
+        ? textP
+        : data
+            .filter((item) => item.userId === userId)
+            .sort(sortItems)
+            .map((item) => (
+              <CardButton key={item.id}>
+                <JournalItem
+                  title={item.title}
+                  date={item.date}
+                  post={item.post}
+                />
+              </CardButton>
+            ))}
     </div>
   );
 };

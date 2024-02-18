@@ -3,10 +3,11 @@ import { UserContext } from '../../App';
 export const SelectUser = () => {
 	const { userId, setUserId } = React.useContext(UserContext);
 
-	console.log('render');
-
+	const onChangeUser = (event) => {
+		setUserId(Number(event.target.value));
+	};
 	return (
-		<select name="user" id="user" value={userId} onChange={() => setUserId(Number(event.target.value))}>
+		<select name="user" id="user" value={userId} onChange={onChangeUser}>
 			<option value="1">Тимур</option>
 			<option value="2">Хан</option>
 			<option value="3">Jack</option>

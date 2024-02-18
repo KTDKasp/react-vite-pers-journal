@@ -29,12 +29,11 @@ function App() {
 		setJournalData([
 			...mapItems(journalData),
 			{
+				...obj,
 				id:
 					journalData.length > 0
 						? Math.max(...journalData.map((itemId) => itemId.id)) + 1
 						: 1,
-				title: obj.title,
-				post: obj.post,
 				date: new Date(obj.date)
 			}
 		]);
